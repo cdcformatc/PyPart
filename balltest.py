@@ -2,10 +2,8 @@ import sys, pygame,math,os
 from Particle import Particle
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
-RED = pygame.Color(255, 0 ,0)
-
 #admin settings
-FIELD_SIZE = 900
+FIELD_SIZE = 300
 MAX_LEVELS = 1000
 
 #difficulty settings
@@ -13,7 +11,8 @@ GAME_LENGTH = 10
 PLAYER_LIVES = 5
 
 #physics settings
-FRICTION_COEFFICIENT = 0.99
+FRICTION_COEFFICIENT = 0.995
+GRAVITY = 0.25
 KEY_ACCEL = 0.5
 MAX_SPEED = 15
 
@@ -44,32 +43,33 @@ def main():
     pygame.init()
     clock = pygame.time.Clock()  
     pygame.key.set_repeat(1, 50)
-    size = width, height = FIELD_SIZE, FIELD_SIZE
+    size = FIELD_SIZE, FIELD_SIZE
     screen = pygame.display.set_mode(size)
-
     font = pygame.font.SysFont("Courier New", 18)
-    lives = 0
-    dead = False
-    points = 0
-
     black = 0, 0, 0
-
-    ball = Particle(screen.get_rect(), MAX_SPEED)
-    ball.reset()
-    while 1:
-        dt = clock.tick(120) #limit to 60 fps
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT: 
-                sys.exit()
+    
+    ball = Particle(screen.get_rect(), max_speed=15, color=(125,5,230))
+    # ball.reset()
+    ball.set_gravity(GRAVITY)
+    ball.set_friction(FRICTION_COEFFICIENT)
+    
+    done = False
+    
+    while not done:
+        dt = clock.tick(120) #limit to 120 fps
         screen.fill(black)
         
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+        
         ball.speed +=  read_keyboard(KEY_ACCEL)
-        ball.gravity(.25)
-        ball.move(FRICTION_COEFFICIENT,0)
+        
+        ball.move(0)
         ball.draw(screen)  
-       
+        
         pygame.display.flip()
+    pygame.quit()
 
 def collision(a, b):
     normal = Vec2d(a.x - b.x, a.y - b.y).normalized()
