@@ -1,10 +1,13 @@
-import sys, pygame,math,os
+from __future__ import division
+import sys, pygame, math, os
+from vec2d import Vec2d
 from Particle import Particle
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 #admin settings
 FIELD_SIZE = 300
 MAX_LEVELS = 1000
+FRAME_RATE = 120
 
 #difficulty settings
 GAME_LENGTH = 10
@@ -13,31 +16,14 @@ PLAYER_LIVES = 5
 #physics settings
 FRICTION_COEFFICIENT = 0.995
 GRAVITY = 0.25
-KEY_ACCEL = 0.5
+KEY_ACCEL = 0.325,0.325
 MAX_SPEED = 15
 
-def read_keyboard(accel):
-    x_accel = 0
-    y_accel = 0
-    
+def read_keyboard():
     x = pygame.key.get_pressed()
-    if x[pygame.K_UP] or x[pygame.K_w]:
-        y_accel+=-accel
-    if x[pygame.K_DOWN] or x[pygame.K_s]:
-        y_accel+=accel
-    if x[pygame.K_RIGHT] or x[pygame.K_d]:
-        x_accel+=accel
-    if x[pygame.K_LEFT] or x[pygame.K_a]:
-        x_accel+=-accel
     if x[pygame.K_ESCAPE] or x[pygame.K_q] or x[pygame.K_BREAK]:
         pygame.event.post(pygame.event.Event(pygame.QUIT))
-    
-    mag =  math.hypot(x_accel, y_accel)
-    if mag > accel:
-        x_accel *= accel / mag
-        y_accel *= accel / mag
         
-    return x_accel, y_accel
 
 def main():
     pygame.init()
@@ -56,16 +42,18 @@ def main():
     done = False
     
     while not done:
-        dt = clock.tick(120) #limit to 120 fps
+        dt = clock.tick(FRAME_RATE) #limit to 120 fps
         screen.fill(black)
+        read_keyboard()
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+                
+        ball.move_keyboard(pygame.key.get_pressed(),KEY_ACCEL)
+        ball.move_mouse(10/FRAME_RATE)
         
-        ball.speed +=  read_keyboard(KEY_ACCEL)
-        
-        ball.move(0)
+        ball.move()
         ball.draw(screen)  
         
         pygame.display.flip()

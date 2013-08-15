@@ -75,7 +75,13 @@ class Particle:
     def apply_gravity(self):
         self.speed[1] += self.gravity
     
-    def move(self, mode = 1):
+    def move_wrap(self):
+        self.move_gen(1)
+        
+    def move(self):
+        self.move_gen(0)
+    
+    def move_gen(self, mode = 1):
         self.apply_friction()
         self.apply_gravity()
         
@@ -122,7 +128,7 @@ class Particle:
     def collide(self, other):
         return self.rect.colliderect(other.rect)
     
-    def movetowards(self, target_pos, accel):
+    def movetowards_wrap(self, target_pos, accel):
         target_x, target_y = target_pos[0], target_pos[1]
         
         dist_right = self.bound.right - self.x
@@ -143,41 +149,100 @@ class Particle:
             #what is closer? the target or the right wall?
             if self.x - target_x < dist_right + target_dist_left: 
                 #go left
-                x_accel =- accel
+                x_accel =- accel[0]
             elif self.x - target_x > dist_right + target_dist_left:
                 #go right
-                x_accel = accel
+                x_accel = accel[0]
         
         #am i to the left of target?
         elif self.x < target_x:
             #what is closer? the target or the left wall?
             if target_x - self.x > dist_left + target_dist_right:
                 #go left
-                x_accel =- accel
+                x_accel =- accel[0]
             elif target_x - self.x < dist_left + target_dist_right:
                 #go right
-                x_accel = accel
+                x_accel = accel[0]
 
         #am i underneath target?
         if self.y > target_y:
             #what is closer? the target or the bottom wall?
             if self.y - target_y < dist_bottom + target_dist_top:
                 #go up
-                y_accel =- accel
+                y_accel =- accel[1]
             elif self.y - target_y > dist_bottom + target_dist_top:
                 #go down
-                y_accel = accel
+                y_accel = accel[1]
         #am i above target?
         elif self.y < target_y:
             #what is closer? the target or the top wall?
             if target_y - self.y > dist_top + target_dist_bottom:
                 #go up
-                y_accel =- accel
+                y_accel =- accel[1]
             elif target_y - self.y < dist_top + target_dist_bottom:
                 #go down
-                y_accel = accel
+                y_accel = accel[1]
+        
+        self.speed += [x_accel, y_accel]
+    
+        self.move_wrap()
+        
+    def movetowards(self, target_pos, accel):
+        target_x, target_y = target_pos[0], target_pos[1]
+        
+        dist_right = self.bound.right - self.x
+        dist_left = self.x - self.bound.left
+        dist_top = self.y - self.bound.top
+        dist_bottom = self.bound.bottom - self.y
+        
+        target_dist_right = self.bound.right - target_x
+        target_dist_left = target_x - self.bound.left
+        target_dist_top = target_y - self.bound.top
+        target_dist_bottom = self.bound.bottom - target_y
+        
+        x_accel = 0
+        y_accel = 0
+        
+        #am i to the right of target?
+        if self.x > target_x:
+            #go left
+            x_accel =- accel[0]
+
+        #am i to the left of target?
+        elif self.x < target_x:
+            #go right
+            x_accel =+ accel[0]
+
+        #am i underneath target?
+        if self.y > target_y:
+            #go up
+            y_accel =- accel[1]
+        #am i above target?
+        elif self.y < target_y:
+            #go up
+            y_accel =+ accel[1]
         
         self.speed += [x_accel, y_accel]
     
         self.move()
-            
+        
+    def move_keyboard(self, pressed, accel):
+        x_accel = 0
+        y_accel = 0
+        if pressed[pygame.K_UP] or pressed[pygame.K_w]:
+            y_accel-=accel[1]
+        if pressed[pygame.K_DOWN] or pressed[pygame.K_s]:
+            y_accel+=accel[1]
+        if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
+            x_accel+=accel[0]
+        if pressed[pygame.K_LEFT] or pressed[pygame.K_a]:
+            x_accel-=accel[0]
+        
+        self.speed += x_accel,y_accel
+        
+    def move_mouse(self,per_frame):
+        if pygame.mouse.get_pressed()[0]:
+            pos = pygame.mouse.get_pos()
+            ballpos = self.x, self.y
+            self.speed[0] = (pos[0]-self.x)*per_frame
+            self.speed[1] = (pos[1]-self.y)*per_frame
