@@ -39,7 +39,9 @@ def main():
     for i in range(2):
         for j in range(2):
             ball = Particle(screen.get_rect(), max_speed=15, color=(125,5,230), gravity=GRAVITY, friction=FRICTION_COEFFICIENT)
-            ball.set(i*FIELD_SIZE,j*FIELD_SIZE)
+            ball.ox = i*FIELD_SIZE
+            ball.oy = j*FIELD_SIZE
+            ball.reset()
             balls.append(ball)
     
     grid = []

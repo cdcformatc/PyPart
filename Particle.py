@@ -36,6 +36,9 @@ class Particle:
             self.child = Particle(self.bound,size=self.radius-1,color=(r,g,b))
         else:
             self.child = None
+            
+        self.ox = (self.bound.right / 2)
+        self.oy = (self.bound.bottom / 2)
         self.reset()
     
     def set(self,x,y):
@@ -46,7 +49,7 @@ class Particle:
             self.child.set(x, y)
         
     def reset(self):
-        self.set(self.bound.right / 2, self.bound.bottom / 2)
+        self.set(self.ox,self.oy)
         self.speed = Vec2d(0, 0)
         
     def draw(self, screen):
