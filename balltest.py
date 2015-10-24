@@ -24,7 +24,6 @@ def read_keyboard():
     if x[pygame.K_ESCAPE] or x[pygame.K_q] or x[pygame.K_BREAK]:
         pygame.event.post(pygame.event.Event(pygame.QUIT))
         
-
 def main():
     pygame.init()
     clock = pygame.time.Clock()  
@@ -34,10 +33,17 @@ def main():
     font = pygame.font.SysFont("Courier New", 18)
     black = 0, 0, 0
     
-    ball = Particle(screen.get_rect(), max_speed=15, color=(125,5,230), gravity=GRAVITY,friction=FRICTION_COEFFICIENT)
+    ball = Particle(screen.get_rect(), max_speed=15, color=(125,5,230), gravity=GRAVITY, friction=FRICTION_COEFFICIENT)
+    
+    grid = []
+    
+    for i in range(100, FIELD_SIZE, 100):
+        for j in range(100, FIELD_SIZE, 100):
+            new = Particle(screen.get_rect(), size=1, max_speed=0, color=(255,255,255), gravity=0, friction=0)
+            new.set(i,j)
+            grid.append(new)
     
     done = False
-    
     while not done:
         dt = clock.tick(FRAME_RATE) #limit to 120 fps
         screen.fill(black)
@@ -52,7 +58,10 @@ def main():
         ball.movetowards((450,450),KEY_ACCEL)
         
         ball.move()
-        ball.draw(screen)  
+        ball.draw(screen)
+        
+        for dot in grid:
+            dot.draw(screen)
         
         pygame.display.flip()
     pygame.quit()
