@@ -20,11 +20,6 @@ KEY_ACCEL = 0.325,0.325
 ATTRACT_ACCEL = 0.225,0.225
 MAX_SPEED = 15
 
-def read_keyboard():
-    x = pygame.key.get_pressed()
-    if x[pygame.K_ESCAPE] or x[pygame.K_q] or x[pygame.K_BREAK]:
-        pygame.event.post(pygame.event.Event(pygame.QUIT))
-        
 def main():
     pygame.init()
     clock = pygame.time.Clock()  
@@ -38,7 +33,7 @@ def main():
     
     for i in range(2):
         for j in range(2):
-            ball = Particle(screen.get_rect(), max_speed=15, color=(125,5,230), gravity=GRAVITY, friction=FRICTION_COEFFICIENT)
+            ball = Particle(screen.get_rect(), max_speed=15, color=(125,5,230), gravity=GRAVITY, friction=FRICTION_COEFFICIENT, size=5)
             ball.ox = i*FIELD_SIZE
             ball.oy = j*FIELD_SIZE
             ball.reset()
@@ -57,11 +52,16 @@ def main():
     while not done:
         dt = clock.tick(FRAME_RATE) #limit to 120 fps
         screen.fill(black)
-        read_keyboard()
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+                
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_q or event.key == pygame.K_BREAK:
+                    pygame.event.post(pygame.event.Event(pygame.QUIT))
+                if event.key == pygame.K_r:
+                    [ball.reset() for ball in balls]
 
         for i,ball in enumerate(balls):         
             pressed = ball.move_keyboard(pygame.key.get_pressed(), ((1 if (i%2) else -1) * KEY_ACCEL[0] , (1 if (i>=2) else -1) * KEY_ACCEL[1]))
