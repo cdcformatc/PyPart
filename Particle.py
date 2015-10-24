@@ -228,21 +228,27 @@ class Particle:
             
         self.speed += [x_accel, y_accel]
     
-        self.move()
+        # self.move()
         
     def move_keyboard(self, pressed, accel):
         x_accel = 0
         y_accel = 0
+        any_pressed = False
         if pressed[pygame.K_UP] or pressed[pygame.K_w]:
             y_accel-=accel[1]
+            any_pressed = True
         if pressed[pygame.K_DOWN] or pressed[pygame.K_s]:
             y_accel+=accel[1]
+            any_pressed = True
         if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
             x_accel+=accel[0]
+            any_pressed = True
         if pressed[pygame.K_LEFT] or pressed[pygame.K_a]:
             x_accel-=accel[0]
+            any_pressed = True
         
         self.speed += x_accel,y_accel
+        return any_pressed
         
     def move_mouse(self,per_frame):
         if pygame.mouse.get_pressed()[0]:

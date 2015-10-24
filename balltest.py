@@ -17,6 +17,7 @@ PLAYER_LIVES = 5
 FRICTION_COEFFICIENT = .980
 GRAVITY = 0
 KEY_ACCEL = 0.325,0.325
+ATTRACT_ACCEL = 0.225,0.225
 MAX_SPEED = 15
 
 def read_keyboard():
@@ -59,11 +60,13 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-        for ball in balls:
-            # ball.move_keyboard(pygame.key.get_pressed(),KEY_ACCEL)
+
+        for i,ball in enumerate(balls):         
+            pressed = ball.move_keyboard(pygame.key.get_pressed(), ((1 if (i%2) else -1) * KEY_ACCEL[0] , (1 if (i>=2) else -1) * KEY_ACCEL[1]))
             # ball.move_mouse(50/FRAME_RATE)
-            ball.movetowards((450,450),KEY_ACCEL)
-            # ball.move()
+            if not pressed:
+                ball.movetowards((450,450),ATTRACT_ACCEL)
+            ball.move()
             ball.draw(screen)
         
         for dot in grid:
