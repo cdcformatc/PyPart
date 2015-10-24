@@ -58,6 +58,7 @@ class Particle:
         speed = self.speed.get_length()
         if speed > self.max_speed:
             self.speed *= self.max_speed / speed
+
         if(round(self.speed[0], ZERO_THRESHOLD) == 0):
             self.speed[0] = 0
         
@@ -87,6 +88,7 @@ class Particle:
         self.apply_gravity()
         
         oldcenter = (self.x, self.y)
+        
         self.x += self.speed[0]
         self.y += self.speed[1]
         self.rect.center = (self.x, self.y)
@@ -204,25 +206,26 @@ class Particle:
         x_accel = 0
         y_accel = 0
         
-        #am i to the right of target?
-        if self.x > target_x:
-            #go left
-            x_accel =- accel[0]
+        if (self.x - target_x)**2 + (self.y - target_y)**2 > 1:
+            #am i to the right of target?
+            if self.x > target_x:
+                #go left
+                x_accel =- accel[0]
 
-        #am i to the left of target?
-        elif self.x < target_x:
-            #go right
-            x_accel =+ accel[0]
+            #am i to the left of target?
+            elif self.x < target_x:
+                #go right
+                x_accel =+ accel[0]
 
-        #am i underneath target?
-        if self.y > target_y:
-            #go up
-            y_accel =- accel[1]
-        #am i above target?
-        elif self.y < target_y:
-            #go up
-            y_accel =+ accel[1]
-        
+            #am i underneath target?
+            if self.y > target_y:
+                #go up
+                y_accel =- accel[1]
+            #am i above target?
+            elif self.y < target_y:
+                #go up
+                y_accel =+ accel[1]
+            
         self.speed += [x_accel, y_accel]
     
         self.move()

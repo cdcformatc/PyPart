@@ -14,7 +14,7 @@ GAME_LENGTH = 10
 PLAYER_LIVES = 5
 
 #physics settings
-FRICTION_COEFFICIENT = .995
+FRICTION_COEFFICIENT = .980
 GRAVITY = 0
 KEY_ACCEL = 0.325,0.325
 MAX_SPEED = 15
@@ -63,7 +63,7 @@ def main():
             # ball.move_keyboard(pygame.key.get_pressed(),KEY_ACCEL)
             # ball.move_mouse(50/FRAME_RATE)
             ball.movetowards((450,450),KEY_ACCEL)
-            ball.move()
+            # ball.move()
             ball.draw(screen)
         
         for dot in grid:
