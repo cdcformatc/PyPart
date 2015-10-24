@@ -33,7 +33,13 @@ def main():
     font = pygame.font.SysFont("Courier New", 18)
     black = 0, 0, 0
     
-    ball = Particle(screen.get_rect(), max_speed=15, color=(125,5,230), gravity=GRAVITY, friction=FRICTION_COEFFICIENT)
+    balls = []
+    
+    for i in range(2):
+        for j in range(2):
+            ball = Particle(screen.get_rect(), max_speed=15, color=(125,5,230), gravity=GRAVITY, friction=FRICTION_COEFFICIENT)
+            ball.set(i*FIELD_SIZE,j*FIELD_SIZE)
+            balls.append(ball)
     
     grid = []
     
@@ -42,6 +48,7 @@ def main():
             new = Particle(screen.get_rect(), size=1, max_speed=0, color=(255,255,255), gravity=0, friction=0)
             new.set(i,j)
             grid.append(new)
+            
     
     done = False
     while not done:
@@ -52,13 +59,12 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-                
-        # ball.move_keyboard(pygame.key.get_pressed(),KEY_ACCEL)
-        ball.move_mouse(50/FRAME_RATE)
-        ball.movetowards((450,450),KEY_ACCEL)
-        
-        ball.move()
-        ball.draw(screen)
+        for ball in balls:
+            # ball.move_keyboard(pygame.key.get_pressed(),KEY_ACCEL)
+            # ball.move_mouse(50/FRAME_RATE)
+            ball.movetowards((450,450),KEY_ACCEL)
+            ball.move()
+            ball.draw(screen)
         
         for dot in grid:
             dot.draw(screen)
