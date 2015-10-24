@@ -247,3 +247,6 @@ class Particle:
             ballpos = self.x, self.y
             self.speed[0] = (pos[0]-self.x)*per_frame
             self.speed[1] = (pos[1]-self.y)*per_frame
+            
+    def draw_line(self, screen, pos):
+        pygame.draw.line(screen, self.color, self.rect.center, pos, self.radius)

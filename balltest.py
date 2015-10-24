@@ -62,6 +62,7 @@ def main():
         
         for dot in grid:
             dot.draw(screen)
+            dot.draw_line(screen, (ball.x,ball.y))
         
         pygame.display.flip()
     pygame.quit()
