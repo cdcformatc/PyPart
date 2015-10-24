@@ -5,7 +5,7 @@ from Particle import Particle
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 #admin settings
-FIELD_SIZE = 300
+FIELD_SIZE = 900
 MAX_LEVELS = 1000
 FRAME_RATE = 120
 
@@ -14,8 +14,8 @@ GAME_LENGTH = 10
 PLAYER_LIVES = 5
 
 #physics settings
-FRICTION_COEFFICIENT = 0.995
-GRAVITY = 0.25
+FRICTION_COEFFICIENT = .995
+GRAVITY = 0
 KEY_ACCEL = 0.325,0.325
 MAX_SPEED = 15
 
@@ -34,10 +34,7 @@ def main():
     font = pygame.font.SysFont("Courier New", 18)
     black = 0, 0, 0
     
-    ball = Particle(screen.get_rect(), max_speed=15, color=(125,5,230))
-    # ball.reset()
-    ball.set_gravity(GRAVITY)
-    ball.set_friction(FRICTION_COEFFICIENT)
+    ball = Particle(screen.get_rect(), max_speed=15, color=(125,5,230), gravity=GRAVITY,friction=FRICTION_COEFFICIENT)
     
     done = False
     
@@ -50,8 +47,9 @@ def main():
             if event.type == pygame.QUIT:
                 done = True
                 
-        ball.move_keyboard(pygame.key.get_pressed(),KEY_ACCEL)
-        ball.move_mouse(10/FRAME_RATE)
+        # ball.move_keyboard(pygame.key.get_pressed(),KEY_ACCEL)
+        ball.move_mouse(50/FRAME_RATE)
+        ball.movetowards((450,450),KEY_ACCEL)
         
         ball.move()
         ball.draw(screen)  
