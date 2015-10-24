@@ -248,5 +248,6 @@ class Particle:
             self.speed[0] = (pos[0]-self.x)*per_frame
             self.speed[1] = (pos[1]-self.y)*per_frame
             
-    def draw_line(self, screen, pos):
-        pygame.draw.line(screen, self.color, self.rect.center, pos, self.radius)
+    def draw_line(self, screen, pos, thresh):
+        if (self.x-pos[0])**2 + (self.y-pos[1])**2 < thresh**2:
+            pygame.draw.line(screen, self.color, self.rect.center, pos, self.radius)
