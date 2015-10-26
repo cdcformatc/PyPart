@@ -73,7 +73,7 @@ class Particle:
     
     def apply_friction(self):
         self.speed *= self.friction
-    
+
     def set_gravity(self, gravity):
         self.gravity = gravity
     
@@ -92,8 +92,10 @@ class Particle:
         
         oldcenter = (self.x, self.y)
         
-        self.x += self.speed[0]
-        self.y += self.speed[1]
+        if self.speed > 0.25:
+            self.x += self.speed[0]
+            self.y += self.speed[1]
+            
         self.rect.center = (self.x, self.y)
         
         if mode == 1:#wrap
