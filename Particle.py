@@ -2,7 +2,7 @@ import pygame,math
 from vec2d import Vec2d
 ZERO_THRESHOLD = 2
 
-class Particle:
+class Particle(object):
     def __init__(self, bound, max_speed=15, 
         color = pygame.Color(255,0,0), size=10, gravity=0, friction=1 ):
         self.bound = bound
