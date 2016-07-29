@@ -4,7 +4,7 @@ ZERO_THRESHOLD = 2
 
 class Particle(object):
     def __init__(self, bound, max_speed=15, 
-        color = pygame.Color(255,0,0), size=10, gravity=0, friction=1 ):
+        color = pygame.Color(255,0,0), size=10, children=True, gravity=0, friction=1 ):
         self.bound = bound
         if isinstance(color,list) or isinstance(color,tuple):
             try:
@@ -24,11 +24,10 @@ class Particle(object):
             
         self.rect = pygame.Rect(bound.right / 2, bound.bottom / 2, size, size)
         self.radius = size
-        self.child = None
         self.max_speed = max_speed
         self.set_gravity(gravity)
         self.set_friction(friction)
-        if size>1:
+        if children and size>1:
             r = int(self.color.r-self.color.r*.15)
             g = int(self.color.g-self.color.g*.15)
             b = int(self.color.b-self.color.b*.15)
